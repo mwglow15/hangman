@@ -5,8 +5,7 @@ class Game
   @@wins = 0
   @@losses = 0
 
-  def initialize(name, word)
-    @name = name
+  def initialize(word)
     @word = word
     @word_array = word.split(//)
     @game_board = []
@@ -15,7 +14,7 @@ class Game
   end
 
   def play
-    @game_board = @word_array.map {|letter| "-"}
+    @game_board = @word_array.map { "-" }
     loop do
       puts "You have #{10 - @num_guess} guesses left"
       
@@ -28,7 +27,6 @@ class Game
       p @game_board
       @guesses[@num_guess] = gets.chomp.downcase
     
-      i = 0
       @game_board = @word_array.map do |letter| 
         if @guesses.include?(letter)
           letter
@@ -48,14 +46,15 @@ class Game
   def end_game?
     if @game_board == @word_array
       puts "You won!"
-      return true
+      @@wins += 1
+      true
     elsif @num_guess == 9
       puts "You've run out of guesses"
-      return true
+      @@losses += 1
+      true
     else
-      return false
+      false
     end
-
   end
 
   attr_accessor :game_done
@@ -63,19 +62,22 @@ end
 
 puts 'Welcome to Hangman!'
 
-words = File.open('google-10000-english-no-swears.txt','r')
+words = File.open('google-10000-english-no-swears.txt', 'r')
 word_lines = words.readlines
 num_words = word_lines.length
 
-word = word_lines[rand(num_words-1)].chomp
+loop do
+  word = word_lines[rand(num_words - 1)].chomp
 
-puts "The current word is #{word}"
+  puts "The current word is #{word}"
 
-word_array = word.split(//)
+  word_array = word.split(//)
 
-p word_array
+  p word_array
 
-puts "What's your name?"
-name = gets.chomp
+  Game.new(word).play
 
-Game.new(name, word).play
+  puts "Would you like to play again? yes/no"
+
+  break if gets.chomp.downcase != 'yes'
+end
