@@ -1,0 +1,18 @@
+--- !ruby/object:Game
+word: goals
+word_array:
+- g
+- o
+- a
+- l
+- s
+game_board:
+- "-"
+- "-"
+- a
+- "-"
+- "-"
+guesses:
+- a
+num_guess: 1
+game_done: false

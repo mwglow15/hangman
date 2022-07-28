@@ -1,5 +1,6 @@
 require 'csv'
 require 'erb'
+require 'yaml'
 
 class Game
   @@wins = 0
@@ -17,7 +18,7 @@ class Game
     @game_board = @word_array.map { "-" }
     loop do
       puts "You have #{10 - @num_guess} guesses left"
-      
+
       unless @guesses == []
         puts "Previous guesses:"
         p @guesses
@@ -37,9 +38,11 @@ class Game
 
       @game_done = end_game?
 
-      break if @game_done
-    
       @num_guess += 1
+
+      @game_done = save_game
+
+      break if @game_done      
     end
   end
 
@@ -54,6 +57,18 @@ class Game
       true
     else
       false
+    end
+  end
+
+  def save_game
+    puts "Would you like to save the game? yes/no"
+    save = gets.chomp.downcase
+    if save == 'yes'
+      yaml = YAML::dump(self)
+      game_file = File.open("./savedgame.yml",'w')
+      game_file.puts yaml
+      game_file.close
+      return true
     end
   end
 
