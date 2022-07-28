@@ -15,26 +15,50 @@ class Game
   end
 
   def play
-    game_board = @word_array.map {|letter| "-"}
+    @game_board = @word_array.map {|letter| "-"}
     loop do
-      puts "You have #{10 - num_guess} guesses left"
-    
+      puts "You have #{10 - @num_guess} guesses left"
+      
+      unless @guesses == []
+        puts "Previous guesses:"
+        p @guesses
+      end
+
       puts "Please guess a letter"
-      p game_board
-      guesses[num_guess] = gets.chomp.downcase
+      p @game_board
+      @guesses[@num_guess] = gets.chomp.downcase
     
       i = 0
-      game_board = word_array.map do |letter| 
-        if guesses.include?(letter)
+      @game_board = @word_array.map do |letter| 
+        if @guesses.include?(letter)
           letter
         else
           "-"
         end
       end
+
+      @game_done = end_game?
+
+      break if @game_done
     
-      num_guess += 1
+      @num_guess += 1
     end
   end
+
+  def end_game?
+    if @game_board == @word_array
+      puts "You won!"
+      return true
+    elsif @num_guess == 9
+      puts "You've run out of guesses"
+      return true
+    else
+      return false
+    end
+
+  end
+
+  attr_accessor :game_done
 end
 
 puts 'Welcome to Hangman!'
@@ -51,5 +75,7 @@ word_array = word.split(//)
 
 p word_array
 
+puts "What's your name?"
+name = gets.chomp
 
-game_board = word_array.map {|letter| "-"}
+Game.new(name, word).play
