@@ -15,7 +15,7 @@ class Game
   end
 
   def play
-    @game_board = @word_array.map { "-" }
+    @game_board = @word_array.map { "-" } if @game_board.empty?
     loop do
       puts "You have #{10 - @num_guess} guesses left"
 
@@ -90,7 +90,15 @@ loop do
 
   p word_array
 
-  Game.new(word).play
+  puts "Would you like to load a saved game? yes/no"
+  answer = gets.chomp
+  if answer == 'yes'
+    item = YAML.load_file('savedgame.yml',permitted_classes: [Game])
+    item.play
+  else
+    Game.new(word).play
+  end
+
 
   puts "Would you like to play again? yes/no"
 
