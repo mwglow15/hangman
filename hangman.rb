@@ -11,22 +11,29 @@ class Game
     @word_array = word.split(//)
     @game_board = []
     @guesses = []
-    @num_guess = 0
+    @num_guesses = 0
+    @incor_guesses = 6
   end
 
   def play
     @game_board = @word_array.map { "-" } if @game_board.empty?
     loop do
-      puts "You have #{10 - @num_guess} guesses left"
+      puts "You have #{@incor_guesses} incorrect guesses left"
 
       unless @guesses == []
         puts "Previous guesses:"
         p @guesses
       end
-
-      puts "Please guess a letter"
       p @game_board
-      @guesses[@num_guess] = gets.chomp.downcase
+      puts "If you would like to save the game, enter 'save'."
+      puts "Otherwise, enter your next guess!"
+      guess = gets.chomp.downcase
+      @game_done = save_game if guess == 'save'
+      break if @game_done
+
+      @guesses[@num_guesses] = guess
+
+      @incor_guesses -= 1 unless @word_array.include?(guess)
     
       @game_board = @word_array.map do |letter| 
         if @guesses.include?(letter)
@@ -35,12 +42,10 @@ class Game
           "-"
         end
       end
+      
+      @num_guesses += 1
 
       @game_done = end_game?
-
-      @num_guess += 1
-
-      @game_done = save_game
 
       break if @game_done      
     end
@@ -51,7 +56,7 @@ class Game
       puts "You won!"
       @@wins += 1
       true
-    elsif @num_guess == 9
+    elsif @incor_guesses == 0
       puts "You've run out of guesses"
       @@losses += 1
       true
@@ -61,15 +66,12 @@ class Game
   end
 
   def save_game
-    puts "Would you like to save the game? yes/no"
-    save = gets.chomp.downcase
-    if save == 'yes'
-      yaml = YAML::dump(self)
-      game_file = File.open("./savedgame.yml",'w')
-      game_file.puts yaml
-      game_file.close
-      return true
-    end
+    yaml = YAML::dump(self)
+    game_file = File.open("./savedgame.yml",'w')
+    game_file.puts yaml
+    game_file.close
+    puts 'Thank you for saving your game! You can find it in "savedgame.yml"'
+    return true
   end
 
   attr_accessor :game_done

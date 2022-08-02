@@ -1,18 +1,27 @@
 --- !ruby/object:Game
-word: goals
+word: porcelain
 word_array:
-- g
+- p
 - o
-- a
+- r
+- c
+- e
 - l
-- s
-game_board:
-- "-"
-- "-"
 - a
+- i
+- "n"
+game_board:
+- p
+- "-"
+- r
+- "-"
+- "-"
+- "-"
+- "-"
 - "-"
 - "-"
 guesses:
-- a
-num_guess: 1
+- r
+- p
+num_guess: 2
 game_done: false
