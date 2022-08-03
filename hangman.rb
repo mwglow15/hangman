@@ -34,20 +34,22 @@ class Game
       @guesses[@num_guesses] = guess
 
       @incor_guesses -= 1 unless @word_array.include?(guess)
-    
-      @game_board = @word_array.map do |letter| 
+
+      @game_board = @word_array.map do |letter|
         if @guesses.include?(letter)
+          puts "Correct!"
           letter
         else
+          puts "Incorrect"
           "-"
         end
       end
-      
+
       @num_guesses += 1
 
       @game_done = end_game?
 
-      break if @game_done      
+      break if @game_done
     end
   end
 
@@ -100,7 +102,6 @@ loop do
   else
     Game.new(word).play
   end
-
 
   puts "Would you like to play again? yes/no"
 
